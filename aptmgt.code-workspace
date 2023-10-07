@@ -1,0 +1,13 @@
+{
+  "folders": [
+    {
+      "name": "project-root",
+      "path": "./"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "supabase/functions/": true
+    }
+  }
+}
