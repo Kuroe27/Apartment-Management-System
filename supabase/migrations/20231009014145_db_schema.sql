@@ -23,21 +23,6 @@ CREATE TABLE Tenants (
     lease_end_date DATE,
     room_id INT REFERENCES Rooms(room_id)
 );
--- Create the LeaseContracts table
-CREATE TABLE LeaseContracts (
-    contract_id SERIAL PRIMARY KEY,
-    tenant_id INT REFERENCES Tenants(tenant_id),
-    room_id INT REFERENCES Rooms(room_id),
-    start_date DATE NOT NULL,
-    end_date DATE NOT NULL
-);
--- Create the MaintenanceRequests table
-CREATE TABLE MaintenanceRequests (
-    request_id SERIAL PRIMARY KEY,
-    room_id INT REFERENCES Rooms(room_id),
-    description TEXT NOT NULL,
-    request_date DATE NOT NULL
-);
 -- Create the Payments table
 CREATE TABLE Payments (
     payment_id SERIAL PRIMARY KEY,
@@ -45,12 +30,22 @@ CREATE TABLE Payments (
     amount DECIMAL(10, 2) NOT NULL,
     payment_date DATE NOT NULL
 );
--- Create the Admins table
-CREATE TABLE Admins (
-    admin_id SERIAL PRIMARY KEY,
-    username VARCHAR(50) NOT NULL UNIQUE,
-    password VARCHAR(100) NOT NULL,
-    -- It's recommended to hash and salt passwords in a real system
-    email VARCHAR(100) NOT NULL,
-    full_name VARCHAR(100) NOT NULL
+create table public.admin (
+    id uuid not null references auth.users on delete cascade,
+    first_name text,
+    last_name text,
+    primary key (id)
 );
+alter table public.admin enable row level security;
+-- inserts a row into public.profiles
+create function public.handle_new_user() returns trigger language plpgsql security definer
+set search_path = public as $$ begin
+insert into public.admin (id)
+values (new.id);
+return new;
+end;
+$$;
+-- trigger the function every time a user is created
+create trigger on_auth_user_created
+after
+insert on auth.users for each row execute procedure public.handle_new_user();
