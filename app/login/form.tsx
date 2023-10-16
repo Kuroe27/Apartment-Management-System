@@ -1,7 +1,12 @@
-import { createServerActionClient } from "@supabase/auth-helpers-nextjs";
+import {
+  createClientComponentClient,
+  createMiddlewareClient,
+  createServerActionClient,
+} from "@supabase/auth-helpers-nextjs";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { Database } from "../database.types";
+import { createClient } from "@supabase/supabase-js";
 
 export default async function () {
   async function signInWithEmail(formData: FormData) {
@@ -17,13 +22,10 @@ export default async function () {
 
   async function signInWithGoogle() {
     "use server";
-    const supabase = createServerActionClient<Database>({ cookies });
-
+    const supabase = createClientComponentClient();
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
     });
-
-    revalidatePath("/");
   }
   return (
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
