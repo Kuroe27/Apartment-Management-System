@@ -2,7 +2,6 @@ import { createServerActionClient } from "@supabase/auth-helpers-nextjs";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { Database } from "../database.types";
-import { Buttons } from "./Buttons";
 
 export default async function () {
   async function signInWithEmail(formData: FormData) {
@@ -15,6 +14,17 @@ export default async function () {
     });
     revalidatePath("/");
   }
+
+  async function signInWithGoogle() {
+    "use server";
+    const supabase = createServerActionClient<Database>({ cookies });
+
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+    });
+
+    revalidatePath("/");
+  }
   return (
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
       <form
@@ -23,7 +33,7 @@ export default async function () {
       >
         <input type="email" name="email" />
         <input type="password" name="password" />
-        <button>Sign In</button>
+        <button formAction={signInWithGoogle}>Sign in with google</button>
       </form>
     </div>
   );
