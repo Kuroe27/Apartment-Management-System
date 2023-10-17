@@ -26,6 +26,7 @@ export default async function () {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
     });
+    console.log("asd");
   }
   return (
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
@@ -35,6 +36,7 @@ export default async function () {
       >
         <input type="email" name="email" />
         <input type="password" name="password" />
+        <button type="submit">signIn</button>
         <button formAction={signInWithGoogle}>Sign in with google</button>
       </form>
     </div>
