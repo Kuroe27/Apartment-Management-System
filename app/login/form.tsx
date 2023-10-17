@@ -26,7 +26,7 @@ export default async function () {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
     });
-    console.log("asd");
+    console.log(data, error);
   }
   return (
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
