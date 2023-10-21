@@ -20,14 +20,26 @@ CREATE TABLE Tenants (
     email VARCHAR(100) NOT NULL,
     phone_number VARCHAR(15) NOT NULL,
     move_in_date DATE NOT NULL,
-    move_out_date DATE,
-    room_id INT REFERENCES Rooms(id) NOT NULL
+    balance DECIMAL (10, 2),
+    room_id INT REFERENCES Rooms(id),
+    monthly_rate DECIMAL (10, 2),
+    REFERENCES Rooms(rent) NOT NULL
+);
+-- Create the Invoices table
+CREATE TABLE Invoices (
+    id SERIAL PRIMARY KEY,
+    tenant_id INT REFERENCES Tenants(id) NOT NULL,
+    date_created DATE NOT NULL,
+    due_date DATE NOT NULL,
+    total_amount INT REFERENCES Tenants(rent),
+    status VARCHAR(10)
 );
 -- Create the Payments table
 CREATE TABLE Payments (
     id SERIAL PRIMARY KEY,
     tenant_id INT REFERENCES Tenants(id) NOT NULL,
-    amount DECIMAL(10, 2) NOT NULL,
+    total_amount INT REFERENCES Invoices(total_amount) NOT NULL,
+    amount_paid DECIMAL(10, 2) NOT NULL,
     payment_date DATE NOT NULL
 );
 create table public.admin (
