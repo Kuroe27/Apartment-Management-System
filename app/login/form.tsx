@@ -9,7 +9,7 @@ import { error } from "console";
 // import { createClient } from "@supabase/supabase-js";
 // import { redirect } from "next/dist/server/api-utils";
 
-export default async function () {
+export default async function Form() {
   async function signInWithEmail(formData: FormData) {
     "use server";
     const supabase = createServerActionClient<Database>({ cookies });

@@ -8,7 +8,6 @@ CREATE TABLE Apartment (
 CREATE TABLE Rooms (
     id SERIAL PRIMARY KEY,
     apartment_id INT REFERENCES Apartment(id) NOT NULL,
-    room_number VARCHAR(10) NOT NULL,
     rent DECIMAL(10, 2) NOT NULL
 );
 -- Create the Tenants table
@@ -16,14 +15,12 @@ CREATE TABLE Tenants (
     id SERIAL PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
-    sex VARCHAR(10) NOT NULL,
     email VARCHAR(100) NOT NULL,
     phone_number VARCHAR(15) NOT NULL,
     move_in_date DATE NOT NULL,
-    balance DECIMAL (10, 2),
-    room_id INT REFERENCES Rooms(id),
-    monthly_rate DECIMAL (10, 2),
-    REFERENCES Rooms(rent) NOT NULL
+    balance DECIMAL(10, 2),
+    room_id INT REFERENCES Rooms(id) NOT NULL,
+    monthly_rate DECIMAL(10, 2)
 );
 -- Create the Invoices table
 CREATE TABLE Invoices (
@@ -31,14 +28,14 @@ CREATE TABLE Invoices (
     tenant_id INT REFERENCES Tenants(id) NOT NULL,
     date_created DATE NOT NULL,
     due_date DATE NOT NULL,
-    total_amount INT REFERENCES Tenants(rent),
-    status VARCHAR(10)
+    total_amount DECIMAL(10, 2),
+    status VARCHAR(10) NOT NULL
 );
 -- Create the Payments table
 CREATE TABLE Payments (
     id SERIAL PRIMARY KEY,
     tenant_id INT REFERENCES Tenants(id) NOT NULL,
-    total_amount INT REFERENCES Invoices(total_amount) NOT NULL,
+    invoce_id INT REFERENCES Invoices(id) NOT NULL,
     amount_paid DECIMAL(10, 2) NOT NULL,
     payment_date DATE NOT NULL
 );
