@@ -26,7 +26,7 @@ CREATE TABLE Tenants (
 CREATE TABLE Invoices (
     id SERIAL PRIMARY KEY,
     tenant_id INT REFERENCES Tenants(id) NOT NULL,
-    date_created DATE NOT NULL,
+    date_created TIMESTAMPTZ DEFAULT NOW(),
     due_date DATE NOT NULL,
     total_amount DECIMAL(10, 2),
     status VARCHAR(10) NOT NULL
@@ -35,7 +35,7 @@ CREATE TABLE Invoices (
 CREATE TABLE Payments (
     id SERIAL PRIMARY KEY,
     tenant_id INT REFERENCES Tenants(id) NOT NULL,
-    invoce_id INT REFERENCES Invoices(id) NOT NULL,
+    invoice_id INT REFERENCES Invoices(id) NOT NULL,
     amount_paid DECIMAL(10, 2) NOT NULL,
     payment_date DATE NOT NULL
 );

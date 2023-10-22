@@ -1,7 +1,7 @@
 CREATE OR REPLACE FUNCTION set_monthly_rent() RETURNS TRIGGER AS $$ BEGIN NEW.monthly_rate := (
         SELECT rent
         FROM rooms
-        WHERE room_id = NEW.room_id
+        WHERE rooms.id = NEW.room_id
     );
 RETURN NEW;
 END;
