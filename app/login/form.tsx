@@ -7,16 +7,10 @@ import { error } from "console";
 // import { redirect } from "next/dist/server/api-utils";
 
 export default async function Form() {
-  interface SignInResponse {
-    error?: {
-      message: string;
-    };
-  }
-
   async function clientAction(formData: FormData) {
-    const res = (await signInWithEmail(formData)) as SignInResponse;
+    const res = await signInWithEmail(formData);
     if (res?.error) {
-      toast(res.error.message);
+      toast.error(res.error.message);
     }
   }
 

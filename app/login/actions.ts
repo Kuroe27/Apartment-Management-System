@@ -7,13 +7,14 @@ import { Database } from "../database.types";
 export async function signInWithEmail(formData: FormData) {
   const supabase = createServerActionClient<Database>({ cookies });
   try {
-    await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email: formData.get("email") as string,
       password: formData.get("password") as string,
     });
+    return { data, error };
     // Return data or error here
   } catch (error) {
     // Return an error object here
-    return error;
+    console.log(error);
   }
 }
