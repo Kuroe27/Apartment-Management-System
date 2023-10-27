@@ -1,7 +1,11 @@
+import SignOutBtn from "./Buttons";
+
 export default function Navbar() {
   return (
     <>
-      <nav></nav>
+      <nav>
+        <SignOutBtn />
+      </nav>
     </>
   );
 }

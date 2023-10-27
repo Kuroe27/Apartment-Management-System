@@ -12,11 +12,10 @@ export default function Form() {
         toast.error(error.message);
       });
     } else {
-      redirect("/dashboard");
-
       setTimeout(() => {
         toast.success("Success");
       });
+      redirect("/dashboard");
     }
 
     console.log(data.session?.user.role);
