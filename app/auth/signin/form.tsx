@@ -2,6 +2,7 @@
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { signInWithEmail } from "./action";
+import { redirect } from "next/navigation";
 
 export default function Form() {
   async function signinUser(formData: FormData) {
@@ -11,11 +12,14 @@ export default function Form() {
         toast.error(error.message);
       });
     } else {
+      redirect("/dashboard");
+
       setTimeout(() => {
         toast.success("Success");
       });
     }
-    console.log(data);
+
+    console.log(data.session?.user.role);
   }
 
   return (

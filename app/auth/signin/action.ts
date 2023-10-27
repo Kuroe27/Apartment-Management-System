@@ -11,6 +11,8 @@ export async function signInWithEmail(formData: FormData) {
     email: formData.get("email") as string,
     password: formData.get("password") as string,
   });
-  revalidatePath("/login");
+
+  revalidatePath("/signin");
+
   return { data, error };
 }
