@@ -2,7 +2,7 @@
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { redirect } from "next/navigation";
-import { signInWithEmail } from "@/lib/action";
+import { signInWithEmail } from "@/lib/actions";
 
 export default function Form() {
   async function signinUser(formData: FormData) {
