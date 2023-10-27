@@ -1,8 +1,8 @@
 "use server";
 import { createServerActionClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
-import { Database } from "../../../database.types";
 import { revalidatePath } from "next/cache";
+import { Database } from "@/types/database.type";
 
 export async function signInWithEmail(formData: FormData) {
   const supabase = await createServerActionClient<Database>({ cookies });

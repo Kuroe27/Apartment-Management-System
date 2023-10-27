@@ -1,8 +1,8 @@
 "use client";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { signInWithEmail } from "./action";
 import { redirect } from "next/navigation";
+import { signInWithEmail } from "@/lib/action";
 
 export default function Form() {
   async function signinUser(formData: FormData) {
