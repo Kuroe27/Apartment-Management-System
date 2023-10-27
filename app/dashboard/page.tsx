@@ -6,7 +6,6 @@ export default async function Dashboard() {
   console.log(session.session?.user.role);
   return (
     <>
-      <p>asd</p>
       <span>{session.session?.user.email}</span>
     </>
   );
