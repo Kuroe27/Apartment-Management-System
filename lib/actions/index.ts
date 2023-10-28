@@ -3,11 +3,7 @@ import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { Database } from "@/types/database.type";
 
-import {
-  CookieOptions,
-  createBrowserClient,
-  createServerClient,
-} from "@supabase/ssr";
+import { CookieOptions, createServerClient } from "@supabase/ssr";
 export async function signInWithEmail(formData: FormData) {
   const cookieStore = cookies();
   const supabase = await createServerClient<Database>(
@@ -36,7 +32,7 @@ export async function signInWithEmail(formData: FormData) {
     password: password as string,
   });
 
-  revalidatePath("/signin");
+  revalidatePath("/dashboard");
 
   return { data, error };
 }

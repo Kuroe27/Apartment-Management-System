@@ -1,10 +1,12 @@
 import Forms from "./form";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
+import { createBrowserClient } from "@supabase/ssr";
 
 export default async function SignIn() {
-  const supabase = await createServerComponentClient({ cookies });
+  const supabase = await createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
 
   const { data: session } = await supabase.auth.getSession();
 
