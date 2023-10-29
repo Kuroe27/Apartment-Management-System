@@ -21,10 +21,23 @@ export default async function Dashboard() {
     }
   );
 
+  let { data: apartments, error } = await supabase
+    .from("apartment")
+    .select("*");
+
+  console.log(apartments);
+
   const { data: session } = await supabase.auth.getSession();
+  console.log(session.session?.user.role);
   return (
     <>
       <span>{session.session?.user.role}</span>
+      {apartments?.map((apartment) => (
+        <div className="text-black" key={apartment.id}>
+          <h2>{apartment.apartment_name}</h2>
+          <p>{apartment.apartment_description}</p>
+        </div>
+      ))}
     </>
   );
 }

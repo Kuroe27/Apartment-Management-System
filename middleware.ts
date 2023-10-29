@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 export async function middleware(req: NextRequest) {
   const res = new NextResponse();

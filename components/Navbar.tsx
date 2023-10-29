@@ -1,7 +1,7 @@
-import SignOutBtn from "./Buttons";
 import { Database } from "@/types/database.type";
-import { CookieOptions, createServerClient } from "@supabase/ssr";
+import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import SignOutBtn from "./Buttons";
 export default async function Navbar() {
   const cookieStore = cookies();
   const supabase = await createServerClient<Database>(
@@ -12,19 +12,13 @@ export default async function Navbar() {
         get(name: string) {
           return cookieStore.get(name)?.value;
         },
-        set(name: string, value: string, options: CookieOptions) {
-          cookieStore.set({ name, value, ...options });
-        },
-        remove(name: string, options: CookieOptions) {
-          cookieStore.delete({ name, ...options });
-        },
       },
     }
   );
-  const { data: session } = await supabase.auth.getSession();
+  const { data: user } = await supabase.auth.getUser();
   return (
-    <>
-      <nav>{session && session.session?.user ? <SignOutBtn /> : null}</nav>
-    </>
+    <nav className="flex justify-between h-16 w-full px-5 items-center">
+      {user.user && <SignOutBtn />}
+    </nav>
   );
 }
