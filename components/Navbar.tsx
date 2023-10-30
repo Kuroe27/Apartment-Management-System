@@ -1,7 +1,8 @@
 import { Database } from "@/types/database.type";
-import { createServerClient } from "@supabase/ssr";
+import { CookieOptions, createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import SignOutBtn from "./Buttons";
+import Link from "next/link";
 export default async function Navbar() {
   const cookieStore = cookies();
   const supabase = await createServerClient<Database>(
@@ -18,7 +19,22 @@ export default async function Navbar() {
   const { data: user } = await supabase.auth.getUser();
   return (
     <nav className="flex justify-between h-16 w-full px-5 items-center">
-      {user.user && <SignOutBtn />}
+      <p>Logo</p>
+      {user.user ? (
+        <ul>
+          <li>
+            <SignOutBtn />
+          </li>
+          <li>
+            <Link href="/dashboard">Dashboard</Link>
+          </li>
+          <li>
+            <Link href="/apartments">Apartment</Link>
+          </li>
+        </ul>
+      ) : (
+        <></>
+      )}
     </nav>
   );
 }
