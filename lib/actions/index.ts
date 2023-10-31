@@ -40,3 +40,20 @@ export async function deleteApartment({ id }: { id: number }) {
     revalidatePath("/apartments");
   }
 }
+
+export async function editAparment(formData: FormData) {
+  const supabase = await createSupabaseServerClient();
+
+  const id = Number(formData.get("apartmentId"));
+  const apartment_name = String(formData.get("apartmentNames"));
+  const apartment_description = String(formData.get("apartmentDescs"));
+
+  const { data, error } = await supabase
+    .from("apartment")
+    .update({
+      apartment_name,
+      apartment_description,
+    })
+    .eq("id", id);
+  revalidatePath("/apartments");
+}

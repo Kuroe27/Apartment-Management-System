@@ -29,7 +29,8 @@ export async function fetchApartment() {
   const supabase = await createSupabaseServerClient();
   const { data: apartments, error } = await supabase
     .from("apartment")
-    .select("*");
+    .select("*")
+    .range(0, 20);
   return apartments;
 }
 
