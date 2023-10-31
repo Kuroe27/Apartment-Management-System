@@ -1,17 +1,9 @@
 import { addApartment } from "@/lib/actions";
-import { Database } from "@/types/database.type";
-import { createBrowserClient } from "@supabase/ssr";
-
 import { DeleteButton } from "@/components/Buttons";
-export default async function Apartment() {
-  const supabase = await createBrowserClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
-  const { data: apartments, error } = await supabase
-    .from("apartment")
-    .select("*");
+import { fetchApartment } from "@/lib/supabase-server";
 
+export default async function Apartment() {
+  const apartments = await fetchApartment();
   return (
     <div className="p-8">
       <form action={addApartment}>

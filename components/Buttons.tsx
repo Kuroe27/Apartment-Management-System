@@ -1,26 +1,13 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { createBrowserClient } from "@supabase/ssr";
-import { Database } from "@/types/database.type";
-import { useFormStatus } from "react-dom";
-import { useTransition } from "react";
 import { deleteApartment } from "@/lib/actions";
+import { createSupabaseClient } from "@/lib/suapabase-client";
+import { handleUserSignout } from "@/lib/supabase-server";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
+import { useFormStatus } from "react-dom";
 
 export default function SignOutBtn() {
-  const router = useRouter();
-
-  const supabase = createBrowserClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
-
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    router.push("/auth/signin");
-    router.refresh();
-  };
-
-  return <button onClick={handleSignOut}>SignOut</button>;
+  return <button onClick={() => handleUserSignout()}>SignOut</button>;
 }
 
 export function Submit() {
@@ -37,7 +24,7 @@ export function DeleteButton({ id }: { id: number }) {
 
   return (
     <button onClick={() => startTransition(() => deleteApartment({ id }))}>
-      SignOut
+      Delete
     </button>
   );
 }
