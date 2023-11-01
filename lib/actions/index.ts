@@ -48,7 +48,7 @@ export async function editAparment(formData: FormData) {
   const apartment_name = String(formData.get("apartmentNames"));
   const apartment_description = String(formData.get("apartmentDescs"));
 
-  const { data, error } = await supabase
+  await supabase
     .from("apartment")
     .update({
       apartment_name,
