@@ -1,5 +1,8 @@
 "use server";
-import { createSupabaseServerClient } from "@/lib/supabase-server";
+import {
+  createSupabaseFetch,
+  createSupabaseServerClient,
+} from "@/lib/supabase-server";
 import { revalidatePath } from "next/cache";
 export async function signInWithEmail(formData: FormData) {
   const supabase = await createSupabaseServerClient();
@@ -16,7 +19,7 @@ export async function signInWithEmail(formData: FormData) {
 }
 
 export async function addApartment(formData: FormData) {
-  const supabase = await createSupabaseServerClient();
+  const supabase = await createSupabaseFetch();
 
   const apartment_name = String(formData.get("apartmentName"));
   const apartment_description = String(formData.get("apartmentDesc"));
@@ -34,7 +37,7 @@ export async function addApartment(formData: FormData) {
 }
 
 export async function deleteApartment({ id }: { id: number }) {
-  const supabase = await createSupabaseServerClient();
+  const supabase = await createSupabaseFetch();
   const { error } = await supabase.from("apartment").delete().eq("id", id);
   if (!error) {
     revalidatePath("/apartments");
@@ -42,7 +45,7 @@ export async function deleteApartment({ id }: { id: number }) {
 }
 
 export async function editAparment(formData: FormData) {
-  const supabase = await createSupabaseServerClient();
+  const supabase = await createSupabaseFetch();
 
   const id = Number(formData.get("apartmentId"));
   const apartment_name = String(formData.get("apartmentNames"));

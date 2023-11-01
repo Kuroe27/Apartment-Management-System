@@ -25,8 +25,24 @@ export async function createSupabaseServerClient() {
   return supabase;
 }
 
+export async function createSupabaseFetch() {
+  const cookieStore = cookies();
+  const supabase = await createServerClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value;
+        },
+      },
+    }
+  );
+  return supabase;
+}
+
 export async function fetchApartment() {
-  const supabase = await createSupabaseServerClient();
+  const supabase = await createSupabaseFetch();
   const { data: apartments, error } = await supabase
     .from("apartment")
     .select("*")
