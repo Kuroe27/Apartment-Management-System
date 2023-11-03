@@ -1,4 +1,4 @@
-import { editAparment } from "@/lib/actions";
+import { editAparment } from "@/utils/actions";
 const EditForm = ({ apt }: any) => {
   return (
     <form action={editAparment}>

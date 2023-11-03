@@ -1,4 +1,4 @@
-import { fetchApartment } from "@/lib/supabase-server";
+import { fetchApartment } from "@/utils/actions";
 
 export default async function Dashboard() {
   const apartments = await fetchApartment();

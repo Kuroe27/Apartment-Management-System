@@ -1,8 +1,9 @@
-import { createSupabaseServerClient } from "@/lib/supabase-server";
 import { redirect } from "next/navigation";
 import Forms from "./form";
+import { createSupabaseServerClient } from "@/utils/supabase/server";
+import { cookies } from "next/headers";
 export default async function SignIn() {
-  const supabase = await createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient(cookies());
 
   const { data: session } = await supabase.auth.getSession();
 

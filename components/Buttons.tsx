@@ -1,6 +1,5 @@
 "use client";
-import { deleteApartment } from "@/lib/actions";
-import { handleUserSignout } from "@/lib/supabase-server";
+import { deleteApartment, handleUserSignout } from "@/utils/actions";
 import { useTransition } from "react";
 import { useFormStatus } from "react-dom";
 

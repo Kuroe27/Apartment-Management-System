@@ -1,6 +1,6 @@
 "use client";
 import { Submit } from "@/components/Buttons";
-import { signInWithEmail } from "@/lib/actions";
+import { signInWithEmail } from "@/utils/actions";
 import { redirect } from "next/navigation";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
