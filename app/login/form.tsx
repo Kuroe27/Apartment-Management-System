@@ -1,5 +1,6 @@
 "use client";
 import { Submit } from "@/components/Buttons";
+import FormInput from "@/components/FormInput";
 import { signInWithEmail } from "@/utils/actions";
 import { redirect } from "next/navigation";
 import { toast } from "react-toastify";
@@ -27,11 +28,17 @@ export default function Form() {
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
       <form
         className="flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
-        action={signIn}
+        action="/auth/sign-in"
+        method="post"
       >
-        <input name="email" />
-        <input type="password" name="password" />
-        <Submit />
+        <FormInput type={"email"} placeholder={"Email"} name={"email"} />
+        <FormInput
+          type={"password"}
+          placeholder={"Password"}
+          name={"password"}
+        />
+
+        <Submit pending={false} text={"Add"} pendingText="Adding ..." />
       </form>
     </div>
   );
