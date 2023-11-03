@@ -1,3 +1,4 @@
+export type Apartment = Database["public"]["Tables"]["apartment"]["Row"];
 export type Json =
   | string
   | number

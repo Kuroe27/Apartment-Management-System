@@ -32,13 +32,14 @@ export default function Form() {
         method="post"
       >
         <FormInput type={"email"} placeholder={"Email"} name={"email"} />
+
         <FormInput
           type={"password"}
           placeholder={"Password"}
           name={"password"}
         />
 
-        <Submit pending={false} text={"Add"} pendingText="Adding ..." />
+        <Submit text={"Add"} pendingText="Adding ..." />
       </form>
     </div>
   );

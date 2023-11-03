@@ -65,6 +65,7 @@ export async function fetchApartment() {
   const { data: apartments, error } = await supabase
     .from("apartment")
     .select("*")
+    .order("id")
     .range(0, 20);
   return apartments;
 }

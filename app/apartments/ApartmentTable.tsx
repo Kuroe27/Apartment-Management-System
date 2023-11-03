@@ -1,10 +1,18 @@
 "use client";
 import { DeleteButton } from "@/components/Buttons";
+import { Button, useDisclosure } from "@nextui-org/react";
 import { useState } from "react";
 import EditForm from "./EditForm";
-const ApartmentTable = ({ apartments }: any) => {
-  const [apt, setApt] = useState({
-    id: "",
+import { Apartment } from "@/types/database.type";
+
+type ApartmentTableProps = {
+  apartments: Apartment[];
+};
+
+const ApartmentTable = ({ apartments }: ApartmentTableProps) => {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [apt, setApt] = useState<Apartment>({
+    id: 0,
     apartment_name: "",
     apartment_description: "",
   });
@@ -31,20 +39,25 @@ const ApartmentTable = ({ apartments }: any) => {
           {apartments?.map((apartment: any) => (
             <tr key={apartment.id}>
               <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900">{apartment.id}</div>
+                <div className="text-sm ">{apartment.id}</div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900">
-                  {apartment.apartment_name}
-                </div>
+                <div className="text-sm ">{apartment.apartment_name}</div>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              <td className="px-6 py-4 whitespace-nowrap text-sm ">
                 {apartment.apartment_description}
               </td>
               <td>
                 <>
                   <DeleteButton id={apartment.id} />
-                  <button onClick={() => setApt(apartment)}>Edit</button>
+                  <Button
+                    onPress={() => {
+                      onOpen();
+                      setApt(apartment);
+                    }}
+                  >
+                    Edit
+                  </Button>
                   <button>View</button>
                 </>
               </td>
@@ -52,8 +65,14 @@ const ApartmentTable = ({ apartments }: any) => {
           ))}
         </tbody>
       </table>
-
-      <EditForm apt={apt} />
+      <>
+        <EditForm
+          apt={apt}
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          setApt={setApt}
+        />
+      </>
     </>
   );
 };
