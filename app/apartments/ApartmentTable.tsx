@@ -4,6 +4,7 @@ import { Button, useDisclosure } from "@nextui-org/react";
 import { useState } from "react";
 import EditForm from "./EditForm";
 import { Apartment } from "@/types/database.type";
+import Link from "next/link";
 
 type ApartmentTableProps = {
   apartments: Apartment[];
@@ -58,7 +59,7 @@ const ApartmentTable = ({ apartments }: ApartmentTableProps) => {
                   >
                     Edit
                   </Button>
-                  <button>View</button>
+                  <Link href={`/apartments/${apartment.id}`}>View</Link>
                 </>
               </td>
             </tr>
@@ -66,12 +67,7 @@ const ApartmentTable = ({ apartments }: ApartmentTableProps) => {
         </tbody>
       </table>
       <>
-        <EditForm
-          apt={apt}
-          isOpen={isOpen}
-          onOpenChange={onOpenChange}
-          setApt={setApt}
-        />
+        <EditForm apt={apt} isOpen={isOpen} onOpenChange={onOpenChange} />
       </>
     </>
   );

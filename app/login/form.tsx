@@ -28,7 +28,7 @@ export default function Form() {
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
       <form
         className="flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
-        action="/auth/sign-in"
+        action={signIn}
         method="post"
       >
         <FormInput type={"email"} placeholder={"Email"} name={"email"} />

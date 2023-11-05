@@ -1,7 +1,7 @@
 "use server";
-import { createClient } from "@/utils/supabase/middleware";
+import { createClient } from "@/utils/supabase/client";
 import { createSupabaseServerClient } from "@/utils/supabase/server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 export async function signInWithEmail(formData: FormData) {
@@ -33,6 +33,7 @@ export async function addApartment(formData: FormData) {
       },
     ])
     .select();
+  revalidateTag("apartment");
   revalidatePath("/apartments");
 }
 
@@ -59,15 +60,24 @@ export async function editAparment(formData: FormData) {
     .eq("id", id);
   revalidatePath("/apartments");
 }
-export async function fetchApartment() {
-  const supabase = await createSupabaseServerClient(cookies());
-
-  const { data: apartments, error } = await supabase
+export async function fetchApartment(query: string, currentPage: number) {
+  const supabase = await createClient();
+  const perPage = 10;
+  const offset = (currentPage - 1) * perPage;
+  const {
+    data: apartments,
+    count,
+    error,
+  } = await supabase
     .from("apartment")
-    .select("*")
+    .select("*", { count: "exact" })
     .order("id")
-    .range(0, 20);
-  return apartments;
+    .range(offset, offset + perPage - 1)
+
+    .or(
+      `apartment_description.ilike.%${query}%,apartment_description.ilike.%${query}%`
+    );
+  return { apartments, count };
 }
 
 export async function handleUserSignout() {

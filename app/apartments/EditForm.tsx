@@ -14,10 +14,9 @@ type Props = {
   apt: Apartment;
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
-  setApt: (apt: Apartment) => void;
 };
 
-const EditForm = ({ apt, isOpen, onOpenChange, setApt }: Props) => {
+const EditForm = ({ apt, isOpen, onOpenChange }: Props) => {
   return (
     <>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
