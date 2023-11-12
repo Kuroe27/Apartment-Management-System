@@ -1,45 +1,33 @@
-"use client";
-import { Submit } from "@/components/Buttons";
-import FormInput from "@/components/FormInput";
-import { signInWithEmail } from "@/utils/actions";
-import { redirect } from "next/navigation";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-const initialState = {
-  message: null,
-};
-export default function Form() {
-  async function signIn(formData: FormData) {
-    const { data, error } = await signInWithEmail(formData);
+import { Database } from "@/types/database.type";
+import { createServerActionClient } from "@supabase/auth-helpers-nextjs";
+import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 
-    if (error) {
-      setTimeout(() => {
-        toast.error(error.message);
-      });
-    } else {
-      setTimeout(() => {
-        toast.success("Success");
-      });
-      redirect("/dashboard");
-    }
+export default async function () {
+  async function signInWithEmail(formData: FormData) {
+    "use server";
+    const supabase = createServerActionClient<Database>({ cookies });
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: formData.get("email") as string,
+      password: formData.get("password") as string,
+    });
+    console.log({ data, error });
+    revalidatePath("/");
   }
 
   return (
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
       <form
         className="flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
-        action={signIn}
+        action="/auth/sign-in"
         method="post"
       >
-        <FormInput type={"email"} placeholder={"Email"} name={"email"} />
-
-        <FormInput
-          type={"password"}
-          placeholder={"Password"}
-          name={"password"}
-        />
-
-        <Submit text={"Add"} pendingText="Adding ..." />
+        <input type="email" name="email" />
+        <input type="password" name="password" />
+        <button type="submit" className=" bg-black">
+          signIn
+        </button>
       </form>
     </div>
   );
