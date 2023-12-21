@@ -5,18 +5,31 @@ import { useState } from "react";
 import EditForm from "./EditForm";
 import { Apartment } from "@/types/database.type";
 import Link from "next/link";
+import DeleteModal from "@/components/DeleteModal";
 
 type ApartmentTableProps = {
   apartments: Apartment[];
 };
 
 const ApartmentTable = ({ apartments }: ApartmentTableProps) => {
+  const [isdelete, setIsdelete] = useState<boolean>(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [apt, setApt] = useState<Apartment>({
     id: 0,
     apartment_name: "",
     apartment_description: "",
   });
+
+  const handleEdit = (apartment: Apartment) => {
+    onOpen();
+    setApt(apartment);
+    setIsdelete(false);
+  };
+  const handleDelete = (apartment: Apartment) => {
+    onOpen();
+    setApt(apartment);
+    setIsdelete(true);
+  };
   return (
     <>
       <table className="min-w-full divide-y divide-gray-200">
@@ -50,15 +63,10 @@ const ApartmentTable = ({ apartments }: ApartmentTableProps) => {
               </td>
               <td>
                 <>
-                  <DeleteButton id={apartment.id} />
-                  <Button
-                    onPress={() => {
-                      onOpen();
-                      setApt(apartment);
-                    }}
-                  >
-                    Edit
+                  <Button onPress={() => handleDelete(apartment)}>
+                    Delete
                   </Button>
+                  <Button onPress={() => handleEdit(apartment)}>Edit</Button>
                   <Link href={`/apartments/${apartment.id}`}>View</Link>
                 </>
               </td>
@@ -67,7 +75,15 @@ const ApartmentTable = ({ apartments }: ApartmentTableProps) => {
         </tbody>
       </table>
       <>
-        <EditForm apt={apt} isOpen={isOpen} onOpenChange={onOpenChange} />
+        {isdelete ? (
+          <DeleteModal
+            id={apt.id}
+            isOpen={isOpen}
+            onOpenChange={onOpenChange}
+          />
+        ) : (
+          <EditForm apt={apt} isOpen={isOpen} onOpenChange={onOpenChange} />
+        )}
       </>
     </>
   );
