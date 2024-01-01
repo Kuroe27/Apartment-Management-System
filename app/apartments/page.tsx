@@ -36,6 +36,8 @@ export default async function Apartment({
           placeholder={"Apartment Descripiton"}
           name={"apartmentDesc"}
         />
+        <input type="file" name="file" multiple />
+
         <Submit text={"Add"} pendingText="Adding ..." />
       </form>
       <h1 className="text-2xl font-bold mb-4">Apartment Listings</h1>
