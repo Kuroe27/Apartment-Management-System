@@ -23,8 +23,11 @@ export async function addApartment(formData: FormData) {
 
   const apartment_name = String(formData.get("apartmentName"));
   const apartment_description = String(formData.get("apartmentDesc"));
+  const files = formData.getAll("file");
+  const timestamp = new Date().getTime();
 
-  const { data, error } = await supabase
+  // Insert the apartment without specifying the ID
+  const { data: insertData, error: insertError } = await supabase
     .from("apartment")
     .insert([
       {
@@ -33,6 +36,31 @@ export async function addApartment(formData: FormData) {
       },
     ])
     .select();
+
+  if (insertError) {
+    throw insertError;
+  }
+
+  // Get the ID of the newly inserted apartment
+  const apartmentId = insertData[0]?.id;
+
+  // Upload each image using the apartment ID and timestamp as the filename
+  const uploadPromises = files.map(async (file, index) => {
+    const filename = `apartments/${apartmentId}-${timestamp}-${index}`;
+    const { error: uploadError } = await supabase.storage
+      .from("room") // specify the bucket name
+      .upload(filename, file, {
+        contentType: "image/jpeg",
+      });
+
+    if (uploadError) {
+      throw uploadError;
+    }
+  });
+
+  // Wait for all file uploads to complete
+  await Promise.all(uploadPromises);
+
   revalidateTag("apartment");
   revalidatePath("/apartments");
 }
