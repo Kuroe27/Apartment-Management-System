@@ -1,6 +1,5 @@
 "use client";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-
 import { Pagination } from "@nextui-org/react";
 
 type Props = {
@@ -14,15 +13,21 @@ const PaginationComponent = ({ count, currentPage }: Props) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
-  const handleOnchange = (newPage: number) => {
-    console.log(newPage);
-    const params = new URLSearchParams(searchParams);
-    if (newPage) {
-      params.set("page", newPage.toString());
-    } else {
-      params.delete("page");
+
+  const handleOnChange = (newPage: number) => {
+    const isValidPage = newPage >= 1 && newPage <= totalPages;
+
+    if (isValidPage) {
+      const params = new URLSearchParams(searchParams);
+
+      if (newPage !== 1) {
+        params.set("page", newPage.toString());
+      } else {
+        params.delete("page");
+      }
+
+      replace(`${pathname}?${params.toString()}`);
     }
-    replace(`${pathname}?${params.toString()}`);
   };
 
   return (
@@ -31,8 +36,8 @@ const PaginationComponent = ({ count, currentPage }: Props) => {
       total={totalPages}
       size="md"
       showControls
-      onChange={(newPage: number) => handleOnchange(newPage)}
-      initialPage={parseInt(searchParams.get("page")?.toString() || "1")}
+      onChange={handleOnChange}
+      initialPage={parseInt(searchParams.get("page") || "1", 10)}
     />
   );
 };
