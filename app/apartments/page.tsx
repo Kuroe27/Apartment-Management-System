@@ -1,7 +1,11 @@
 import { Submit } from "@/components/Buttons";
 import FormInput from "@/components/FormInput";
 import Search from "@/components/Search";
-import { addApartment, fetchApartment } from "@/utils/actions";
+import {
+  addApartment,
+  fetchApartment,
+  getApartmentImages,
+} from "@/utils/actions";
 import ApartmentTable from "./ApartmentTable";
 import PaginationComponent from "./PaginationComponent";
 
@@ -21,6 +25,9 @@ export default async function Apartment({
     currentPage
   );
 
+  const id = 43;
+  const { images, error } = await getApartmentImages();
+
   return (
     <div className="p-8">
       <Search placeholder="Search apartments..." />
@@ -33,15 +40,20 @@ export default async function Apartment({
         />
         <FormInput
           type={"text"}
-          placeholder={"Apartment Descripiton"}
+          placeholder={"Apartment Description"}
           name={"apartmentDesc"}
         />
         <input type="file" name="file" multiple />
 
         <Submit text={"Add"} pendingText="Adding ..." />
       </form>
+      <div>
+        {images?.map((image: any) => (
+          <p>{image.name}</p>
+        ))}
+      </div>
+
       <h1 className="text-2xl font-bold mb-4">Apartment Listings</h1>
-      {/* Apartments Table */}
       <ApartmentTable apartments={apartments || []} />
       <PaginationComponent count={count || 0} currentPage={currentPage ?? 1} />
     </div>
