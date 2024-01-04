@@ -44,7 +44,7 @@ export async function addApartment(formData: FormData) {
 
   for (let index = 0; index < files.length; index++) {
     const file = files[index];
-    const filename = `apartments/${apartmentId}-${timestamp}-${index}`;
+    const filename = `${apartmentId}-${timestamp}-${index}`;
     const { error: uploadError } = await supabase.storage
       .from("room")
       .upload(filename, file, {
@@ -56,7 +56,7 @@ export async function addApartment(formData: FormData) {
     }
   }
 
-  revalidateTag("apartment");
+  revalidateTag("apartments");
   revalidatePath("/apartments");
 }
 
@@ -95,12 +95,29 @@ export async function fetchApartment(query: string, currentPage: number) {
     .from("apartment")
     .select("*", { count: "exact" })
     .order("id")
-    .range(offset, offset + perPage - 1)
+    .range(offset, offset + perPage + 1)
 
     .or(
       `apartment_description.ilike.%${query}%,apartment_description.ilike.%${query}%`
     );
   return { apartments, count };
+}
+
+export async function getApartmentImages({ id }: { id: number }) {
+  const supabase = await createClient();
+  const { data: images, error } = await supabase.storage.from("room").list();
+
+  if (error) {
+    return { images: null, error };
+  }
+
+  const filteredImages = images.filter((image) => {
+    const imageNameParts = image.name.split("-");
+    const imageId = parseInt(imageNameParts[0]);
+    return imageId === id;
+  });
+
+  return { images: filteredImages, error: null };
 }
 
 export async function handleUserSignout() {
