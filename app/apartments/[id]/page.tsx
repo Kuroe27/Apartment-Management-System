@@ -6,6 +6,7 @@ type Props = {
     id: string;
   };
 };
+
 export default async function ApartmentProfile({ params }: Props) {
   const supabase = createClient();
   let { data: apartment, error } = await supabase
@@ -13,12 +14,19 @@ export default async function ApartmentProfile({ params }: Props) {
     .select("*")
     .eq("id", params.id);
 
-  if (!apartment) {
+  if (!apartment || error) {
     return <div>Loading...</div>;
   }
 
-  const id = params.id;
-  const { images } = await getApartmentImages(id);
+  const id = parseInt(params.id, 10);
+  const { images, error: imagesError } = await getApartmentImages({
+    id: parseInt(params.id, 10),
+  });
+
+  if (imagesError) {
+    console.error(imagesError);
+  }
+
   return (
     <>
       <p>{params.id}</p>
@@ -33,7 +41,6 @@ export default async function ApartmentProfile({ params }: Props) {
           />
         ))}
       </div>
-      <div></div>
     </>
   );
 }
