@@ -18,14 +18,8 @@ export default async function ApartmentProfile({ params }: Props) {
     return <div>Loading...</div>;
   }
 
-  const id = parseInt(params.id, 10);
-  const { images, error: imagesError } = await getApartmentImages({
-    id: parseInt(params.id, 10),
-  });
-
-  if (imagesError) {
-    console.error(imagesError);
-  }
+  const { data } = await getApartmentImages({ id: Number(params.id) });
+  console.log(data);
 
   return (
     <>
@@ -33,10 +27,10 @@ export default async function ApartmentProfile({ params }: Props) {
       <h2>{apartment[0].apartment_name}</h2>
       <p>{apartment[0].apartment_description}</p>
       <div>
-        {images?.map((image: any) => (
+        {data?.map((image: any) => (
           <img
             key={image.id}
-            src={`http://localhost:54321/storage/v1/object/public/room/${image.name}`}
+            src={`http://localhost:54321/storage/v1/object/public/room/${params.id}/${image.name}`}
             alt=""
           />
         ))}
