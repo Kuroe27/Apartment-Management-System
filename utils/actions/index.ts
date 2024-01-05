@@ -44,7 +44,7 @@ export async function addApartment(formData: FormData) {
 
   for (let index = 0; index < files.length; index++) {
     const file = files[index];
-    const filename = `${apartmentId}-${timestamp}-${index}`;
+    const filename = `${apartmentId}/${timestamp}-${index}`;
     const { error: uploadError } = await supabase.storage
       .from("room")
       .upload(filename, file, {
@@ -105,19 +105,9 @@ export async function fetchApartment(query: string, currentPage: number) {
 
 export async function getApartmentImages({ id }: { id: number }) {
   const supabase = await createClient();
-  const { data: images, error } = await supabase.storage.from("room").list();
+  const { data, error } = await supabase.storage.from(`room`).list(`${id}`);
 
-  if (error) {
-    return { images: null, error };
-  }
-
-  const filteredImages = images.filter((image) => {
-    const imageNameParts = image.name.split("-");
-    const imageId = parseInt(imageNameParts[0]);
-    return imageId === id;
-  });
-
-  return { images: filteredImages, error: null };
+  return { data };
 }
 
 export async function handleUserSignout() {
