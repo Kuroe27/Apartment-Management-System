@@ -25,9 +25,6 @@ export default async function Apartment({
     currentPage
   );
 
-  const id = 43;
-  const { images, error } = await getApartmentImages();
-
   return (
     <div className="p-8">
       <Search placeholder="Search apartments..." />
@@ -47,11 +44,6 @@ export default async function Apartment({
 
         <Submit text={"Add"} pendingText="Adding ..." />
       </form>
-      <div>
-        {images?.map((image: any) => (
-          <p>{image.name}</p>
-        ))}
-      </div>
 
       <h1 className="text-2xl font-bold mb-4">Apartment Listings</h1>
       <ApartmentTable apartments={apartments || []} />
