@@ -103,10 +103,15 @@ export async function fetchApartment(query: string, currentPage: number) {
   return { apartments, count };
 }
 
+export async function getRooms() {
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("rooms").select("*");
+  console.log(data);
+  return { data };
+}
 export async function getApartmentImages({ id }: { id: number }) {
   const supabase = await createClient();
   const { data, error } = await supabase.storage.from(`room`).list(`${id}`);
-
   return { data };
 }
 
@@ -114,4 +119,48 @@ export async function handleUserSignout() {
   const supabase = await createSupabaseServerClient(cookies());
   await supabase.auth.signOut();
   redirect("/login");
+}
+
+export async function editRoom(formData: FormData) {
+  const supabase = await createSupabaseServerClient(cookies());
+  const id = Number(formData.get("roomId"));
+  const rent = String(formData.get("roomRent"));
+  const status = String(formData.get("status"));
+
+  await supabase
+    .from("rooms")
+    .update({
+      rent,
+      status,
+    })
+    .eq("id", id);
+  revalidatePath("/rooms");
+}
+
+export async function addRoom(formData: FormData) {
+  const supabase = await createSupabaseServerClient(cookies());
+
+  const rent = String(formData.get("rent"));
+  const status = String(formData.get("status"));
+  const apartment_id = String(formData.get("aptId"));
+
+  const { data, error } = await supabase
+    .from("rooms")
+    .insert([
+      {
+        rent,
+        status,
+        apartment_id,
+      },
+    ])
+    .select();
+  revalidatePath("/rooms");
+}
+
+export async function getApartment() {
+  const supabase = await createClient();
+  const { data: apartments, error } = await supabase
+    .from("apartment")
+    .select("*");
+  return { apartments };
 }
