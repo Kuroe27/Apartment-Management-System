@@ -7,7 +7,7 @@ import {
   ModalHeader,
 } from "@nextui-org/react";
 import { Apartment } from "@/types/database.type";
-import { editAparment } from "@/utils/actions";
+import { editAparment, editRoom } from "@/utils/actions";
 import FormInput from "@/components/FormInput";
 import { Submit } from "@/components/Buttons";
 type Props = {
@@ -17,7 +17,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-const EditForm = ({ apt, isOpen, onOpenChange, children }: Props) => {
+const EditForm = ({ apt, isOpen, onOpenChange, children, action }: Props) => {
   return (
     <>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
@@ -28,7 +28,7 @@ const EditForm = ({ apt, isOpen, onOpenChange, children }: Props) => {
                 Modal Title
               </ModalHeader>
               <ModalBody>
-                <form action={editAparment}>
+                <form action={action}>
                   <h1 className="text-3xl mb-5">Add Data</h1>
                   {children}
                   <Submit text={"Update"} pendingText="Updating ..." />
