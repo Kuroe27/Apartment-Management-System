@@ -13,7 +13,7 @@ type Props = {
   onOpenChange: (isOpen: boolean) => void;
 };
 
-const EditForm = ({ id, isOpen, onOpenChange }: Props) => {
+const EditForm = ({ id, isOpen, onOpenChange, onDelete }: Props) => {
   return (
     <>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
@@ -32,7 +32,7 @@ const EditForm = ({ id, isOpen, onOpenChange }: Props) => {
 
                     <Button
                       onPress={() => {
-                        deleteApartment({ id });
+                        onDelete({ id });
                         onClose();
                       }}
                     >
