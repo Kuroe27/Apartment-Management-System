@@ -103,12 +103,6 @@ export async function fetchApartment(query: string, currentPage: number) {
   return { apartments, count };
 }
 
-export async function getRooms() {
-  const supabase = await createClient();
-  const { data, error } = await supabase.from("rooms").select("*");
-  console.log(data);
-  return { data };
-}
 export async function getApartmentImages({ id }: { id: number }) {
   const supabase = await createClient();
   const { data, error } = await supabase.storage.from(`room`).list(`${id}`);
@@ -121,6 +115,15 @@ export async function handleUserSignout() {
   redirect("/login");
 }
 
+export async function getApartment() {
+  const supabase = await createClient();
+  const { data: apartments, error } = await supabase
+    .from("apartment")
+    .select("*");
+  return { apartments };
+}
+
+// rooms
 export async function editRoom(formData: FormData) {
   const supabase = await createSupabaseServerClient(cookies());
   const id = Number(formData.get("roomId"));
@@ -157,10 +160,30 @@ export async function addRoom(formData: FormData) {
   revalidatePath("/rooms");
 }
 
-export async function getApartment() {
+export async function deleteRoom({ id }: { id: number }) {
+  const supabase = await createSupabaseServerClient(cookies());
+  const { error } = await supabase.from("rooms").delete().eq("id", id);
+  if (!error) {
+    revalidatePath("/rooms");
+  }
+}
+
+export async function getRooms() {
   const supabase = await createClient();
-  const { data: apartments, error } = await supabase
-    .from("apartment")
-    .select("*");
-  return { apartments };
+  const { data, error } = await supabase.from("rooms").select("*");
+  return { data };
+}
+
+export async function fetchRoom(query: string, currentPage: number) {
+  const supabase = await createClient();
+  const perPage = 10;
+  const offset = (currentPage - 1) * perPage;
+  const { data, count, error } = await supabase
+    .from("rooms")
+    .select("*", { count: "exact" })
+    .order("id")
+    .range(offset, offset + perPage + 1);
+
+  console.log(data);
+  return { data, count };
 }
