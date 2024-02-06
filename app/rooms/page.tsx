@@ -2,6 +2,7 @@ import { Table } from "@/components/Table";
 import {
   addRoom,
   fetchApartment,
+  fetchRoom,
   getApartment,
   getRooms,
 } from "@/utils/actions";
@@ -9,11 +10,19 @@ import RoomTable from "./RoomTable";
 import FormInput from "@/components/FormInput";
 import { Submit } from "@/components/Buttons";
 import Dropdown from "@/components/Dropdown";
-
-export default async function Rooms() {
-  const { data = [] } = await getRooms();
+export default async function Rooms({
+  searchParams,
+}: {
+  searchParams?: {
+    query?: string;
+    page?: number;
+  };
+}) {
+  const query = searchParams?.query || "";
+  const currentPage = Number(searchParams?.page) || 1;
+  const { data = [], count = 0 } = await fetchRoom(query, currentPage);
   const { apartments = [] } = await getApartment();
-
+  console.log(data);
   const columns = [
     {
       Header: "ID",
@@ -46,7 +55,7 @@ export default async function Rooms() {
         <Submit text={"Add"} pendingText="Adding ..." />
       </form>
 
-      <RoomTable apartments={data} />
+      <RoomTable apartments={data || []} />
     </>
   );
 }
