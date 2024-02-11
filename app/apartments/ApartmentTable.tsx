@@ -6,6 +6,8 @@ import EditForm from "./EditForm";
 import { Apartment } from "@/types/database.type";
 import Link from "next/link";
 import DeleteModal from "@/components/DeleteModal";
+import FormInput from "@/components/FormInput";
+import { Table } from "@/components/Table";
 
 type ApartmentTableProps = {
   apartments: Apartment[];
@@ -22,58 +24,31 @@ const ApartmentTable = ({ apartments }: ApartmentTableProps) => {
 
   const handleEdit = (apartment: Apartment) => {
     onOpen();
+    ``;
     setApt(apartment);
     setIsdelete(false);
   };
   const handleDelete = (apartment: Apartment) => {
     onOpen();
-    setApt(apartment);
     setIsdelete(true);
+    setApt(apartment);
   };
+
+  const columns = [
+    { key: "id", label: "Apartment ID" },
+    { key: "apartment_name", label: "Apartment Name" },
+    { key: "apartment_description", label: "Description" },
+  ];
+
   return (
     <>
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead>
-          <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Apartment ID
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Apartment Name
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Description
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Actions
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {apartments?.map((apartment: any) => (
-            <tr key={apartment.id}>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm ">{apartment.id}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm ">{apartment.apartment_name}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm ">
-                {apartment.apartment_description}
-              </td>
-              <td>
-                <>
-                  <Button onPress={() => handleDelete(apartment)}>
-                    Delete
-                  </Button>
-                  <Button onPress={() => handleEdit(apartment)}>Edit</Button>
-                  <Link href={`/apartments/${apartment.id}`}>View</Link>
-                </>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <Table
+        columns={columns}
+        data={apartments}
+        handleDelete={handleDelete}
+        handleEdit={handleEdit}
+        dynamicLink={"apartments"}
+      />
       <>
         {isdelete ? (
           <DeleteModal
@@ -82,7 +57,26 @@ const ApartmentTable = ({ apartments }: ApartmentTableProps) => {
             onOpenChange={onOpenChange}
           />
         ) : (
-          <EditForm apt={apt} isOpen={isOpen} onOpenChange={onOpenChange} />
+          <EditForm apt={apt} isOpen={isOpen} onOpenChange={onOpenChange}>
+            <FormInput
+              type={"number"}
+              placeholder={"Id"}
+              name={"apartmentId"}
+              defaultValue={apt.id.toString()}
+            />
+            <FormInput
+              type={"text"}
+              placeholder={"Apartment Name"}
+              name={"apartmentNames"}
+              defaultValue={apt.apartment_name ?? ""}
+            />
+            <FormInput
+              type={"text"}
+              placeholder={"Apartment Description"}
+              name={"apartmentDescs"}
+              defaultValue={apt.apartment_description ?? ""}
+            />
+          </EditForm>
         )}
       </>
     </>
